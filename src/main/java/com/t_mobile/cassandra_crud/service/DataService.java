@@ -42,6 +42,7 @@ public class DataService {
             user.setUsername(dto.getUsername());
             user.setEmail(dto.getEmail());
 
+
             if (dto.getAddress() != null) {
                 user.setStreet(dto.getAddress().getStreet());
                 user.setSuite(dto.getAddress().getSuite());
@@ -52,6 +53,17 @@ public class DataService {
                     user.setLat(dto.getAddress().getGeo().getLat());
                     user.setLng(dto.getAddress().getGeo().getLng());
                 }
+            }
+
+
+            user.setPhone(dto.getPhone());
+            user.setWebsite(dto.getWebsite());
+
+
+            if (dto.getCompany() != null) {
+                user.setCompanyName(dto.getCompany().getName());
+                user.setCatchPhrase(dto.getCompany().getCatchPhrase());
+                user.setBs(dto.getCompany().getBs());
             }
 
             list.add(user);

@@ -22,4 +22,11 @@ public class User {
 
     private String lat;
     private String lng;
+
+    private String phone;
+    private String website;
+
+    private String companyName;
+    private String catchPhrase;
+    private String bs;
 }
