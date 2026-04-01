@@ -1,5 +1,6 @@
 package com.t_mobile.cassandra_crud.controller;
 
+import com.t_mobile.cassandra_crud.dto.UserResponseDTO;
 import com.t_mobile.cassandra_crud.entity.User;
 import com.t_mobile.cassandra_crud.repository.UserRepository;
 import com.t_mobile.cassandra_crud.service.DataService;
@@ -25,8 +26,13 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return repo.findAll();
+    public List<UserResponseDTO> getAll() {
+
+        List<User> users = repo.findAll();
+
+        return users.stream()
+                .map(service::convertToResponse)
+                .toList();
     }
 
     @PostMapping

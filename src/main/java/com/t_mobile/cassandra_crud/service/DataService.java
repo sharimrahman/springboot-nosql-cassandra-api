@@ -1,6 +1,7 @@
 package com.t_mobile.cassandra_crud.service;
 
 import com.t_mobile.cassandra_crud.dto.UserDTO;
+import com.t_mobile.cassandra_crud.dto.UserResponseDTO;
 import com.t_mobile.cassandra_crud.entity.Post;
 import com.t_mobile.cassandra_crud.entity.User;
 import com.t_mobile.cassandra_crud.repository.PostRepository;
@@ -78,5 +79,40 @@ public class DataService {
                 Post[].class
         );
         postRepo.saveAll(Arrays.asList(posts));
+    }
+
+    public UserResponseDTO convertToResponse(User user) {
+
+        UserResponseDTO dto = new UserResponseDTO();
+
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPhone(user.getPhone());
+        dto.setWebsite(user.getWebsite());
+
+
+        UserResponseDTO.Address address = new UserResponseDTO.Address();
+        address.setStreet(user.getStreet());
+        address.setSuite(user.getSuite());
+        address.setCity(user.getCity());
+        address.setZipcode(user.getZipcode());
+
+        UserResponseDTO.Geo geo = new UserResponseDTO.Geo();
+        geo.setLat(user.getLat());
+        geo.setLng(user.getLng());
+
+        address.setGeo(geo);
+        dto.setAddress(address);
+
+        UserResponseDTO.Company company = new UserResponseDTO.Company();
+        company.setName(user.getCompanyName());
+        company.setCatchPhrase(user.getCatchPhrase());
+        company.setBs(user.getBs());
+
+        dto.setCompany(company);
+
+        return dto;
     }
 }
