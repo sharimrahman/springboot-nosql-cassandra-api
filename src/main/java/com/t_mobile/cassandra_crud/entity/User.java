@@ -1,9 +1,20 @@
 package com.t_mobile.cassandra_crud.entity;
 
 import lombok.Data;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.*;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "id",
+        "name",
+        "username",
+        "email",
+        "address",
+        "phone",
+        "website",
+        "company"
+})
 @Data
 @Table("users")
 public class User {
@@ -15,18 +26,8 @@ public class User {
     private String username;
     private String email;
 
-    private String street;
-    private String suite;
-    private String city;
-    private String zipcode;
-
-    private String lat;
-    private String lng;
-
+    private Address address;
     private String phone;
     private String website;
-
-    private String companyName;
-    private String catchPhrase;
-    private String bs;
+    private Company company;
 }

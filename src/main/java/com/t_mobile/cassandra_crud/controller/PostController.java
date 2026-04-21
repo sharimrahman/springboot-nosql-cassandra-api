@@ -2,7 +2,8 @@ package com.t_mobile.cassandra_crud.controller;
 
 import com.t_mobile.cassandra_crud.entity.Post;
 import com.t_mobile.cassandra_crud.repository.PostRepository;
-import com.t_mobile.cassandra_crud.service.DataService;
+import com.t_mobile.cassandra_crud.service.PostService;
+import com.t_mobile.cassandra_crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +17,14 @@ public class PostController {
     private PostRepository repo;
 
     @Autowired
-    private DataService service;
+    private UserService userService;
+
+    @Autowired
+    private PostService postService;
 
     @GetMapping("/load")
     public String loadPosts() {
-        service.loadPosts();
+        postService.loadPosts();
         return "Posts loaded";
     }
 

@@ -1,9 +1,8 @@
 package com.t_mobile.cassandra_crud.controller;
 
-import com.t_mobile.cassandra_crud.dto.UserResponseDTO;
 import com.t_mobile.cassandra_crud.entity.User;
 import com.t_mobile.cassandra_crud.repository.UserRepository;
-import com.t_mobile.cassandra_crud.service.DataService;
+import com.t_mobile.cassandra_crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,35 +13,30 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository repo;
+    private UserRepository userRepo;
 
     @Autowired
-    private DataService service;
+    private UserService userService;
 
     @GetMapping("/load")
     public String loadUsers() {
-        service.loadUsers();
+        userService.loadUsers();
         return "Users loaded";
     }
 
     @GetMapping
-    public List<UserResponseDTO> getAll() {
-
-        List<User> users = repo.findAll();
-
-        return users.stream()
-                .map(service::convertToResponse)
-                .toList();
+    public List<User> getAll() {
+        return userRepo.findAll();
     }
 
     @PostMapping
     public User create(@RequestBody User user) {
-        return repo.save(user);
+        return userRepo.save(user);
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
-        repo.deleteById(id);
+        userRepo.deleteById(id);
         return "Deleted";
     }
 }
