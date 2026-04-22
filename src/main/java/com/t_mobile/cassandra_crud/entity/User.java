@@ -1,5 +1,5 @@
 package com.t_mobile.cassandra_crud.entity;
-
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.*;
 
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class User {
 
     @PrimaryKey
+    @NotNull(message = "Id is required")
     private Integer id;
 
     private String name;

@@ -3,6 +3,7 @@ package com.t_mobile.cassandra_crud.controller;
 import com.t_mobile.cassandra_crud.entity.User;
 import com.t_mobile.cassandra_crud.repository.UserRepository;
 import com.t_mobile.cassandra_crud.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +30,20 @@ public class UserController {
         return userRepo.findAll();
     }
 
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return userRepo.save(user);
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
     }
+
+    @PostMapping
+    public User create(@Valid @RequestBody User user) {
+        return userService.createUser(user);
+    }
+
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
-        userRepo.deleteById(id);
-        return "Deleted";
+        userService.deleteUser(id);
+        return "User deleted successfully";
     }
 }

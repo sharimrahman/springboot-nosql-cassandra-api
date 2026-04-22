@@ -1,12 +1,14 @@
 package com.t_mobile.cassandra_crud.service;
 
 import com.t_mobile.cassandra_crud.config.ApiConfig;
-import com.t_mobile.cassandra_crud.config.SecurityConfig;
 import com.t_mobile.cassandra_crud.entity.Address;
 import com.t_mobile.cassandra_crud.entity.Company;
 import com.t_mobile.cassandra_crud.entity.Geo;
 import com.t_mobile.cassandra_crud.entity.User;
+import com.t_mobile.cassandra_crud.exception.DataConflictException;
+import com.t_mobile.cassandra_crud.exception.ResourceNotFoundException;
 import com.t_mobile.cassandra_crud.repository.UserRepository;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,28 @@ public class UserService {
     @Autowired
     private RestClient restClient;
 
+    public User getUserById(Integer id) {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    }
+
+    public User createUser(User user) {
+
+        if (userRepo.existsById(user.getId())) {
+            throw new DataConflictException("User already exists with id: " + user.getId());
+        }
+
+        return userRepo.save(user);
+    }
+
+    public void deleteUser(Integer id) {
+
+        if (!userRepo.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
+
+        userRepo.deleteById(id);
+    }
 
     public void loadUsers() {
 
@@ -35,11 +59,16 @@ public class UserService {
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<User>>() {});
 
-        if (users == null) return;
+        //Validate API response
+        if (users == null || users.isEmpty()) {
+            throw new ResourceNotFoundException("No users received from external API");
+        }
 
         List<User> list = new ArrayList<>();
 
         for (User dto : users) {
+
+
 
             User user = new User();
 
@@ -50,7 +79,7 @@ public class UserService {
             user.setPhone(dto.getPhone());
             user.setWebsite(dto.getWebsite());
 
-            // Address mapping
+            //Address mapping
             if (dto.getAddress() != null) {
 
                 Address address = new Address();
@@ -69,7 +98,7 @@ public class UserService {
                 user.setAddress(address);
             }
 
-            // Company mapping
+            //Company mapping
             if (dto.getCompany() != null) {
 
                 Company company = new Company();
@@ -83,6 +112,7 @@ public class UserService {
             list.add(user);
         }
 
+        //Save to DB
         userRepo.saveAll(list);
     }
 }
